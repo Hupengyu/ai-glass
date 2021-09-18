@@ -1,0 +1,10 @@
+.idea/
+.git
+.gitignore
+imgg/
+imgg_test/
+model_data/
+pic_img/
+result/
+results/
+weights/

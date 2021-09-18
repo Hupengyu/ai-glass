@@ -1,0 +1,1 @@
+a79ec4e6-472d-413e-9585-66121b731cba,001,http://49.233.13.40:12077/WebAPI/api/aiReceiveData
