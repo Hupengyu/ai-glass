@@ -5,13 +5,8 @@ import numpy as np
 from PIL import Image
 import requests
 from io import BytesIO
-import matplotlib.pyplot as plt
-import datetime as dt
-import matplotlib
 
 
-
-matplotlib.use('Agg')
 img_path = "imgg/001"
 
 def pHash(img):
@@ -107,7 +102,7 @@ def get_img_list(dir, firelist, ext=None):
     return firelist
 
 
-def read_img(image_path, fra):
+def read_img(img, fra):
     """
     Args:
         image_path:
@@ -122,15 +117,10 @@ def read_img(image_path, fra):
     fps_num = 0
     img_num = 0
     save_img = None
-    imglist = get_img_list(image_path, [], 'jpg')
 
-    imglist.sort()
-
-
-    img = cv2.imread(imglist[-1], cv2.IMREAD_COLOR)
 
     n3, n4= runtwoImageSimilaryFun(fra, img)
-
+    #print(n3,n4)
 
     img_num += 1
     if n3 < 15 or n4 > 0.8:
@@ -146,7 +136,7 @@ def read_img(image_path, fra):
     return same_image
 
 
-def hash_rmrept(frame, img_path):
+def hash_rmrept(frame, img):
     """
     Args:
         frame:
@@ -157,11 +147,6 @@ def hash_rmrept(frame, img_path):
     """
     diff_pic = 'diff_pic'
     same_pic = 'same_pic'
-    if not os.path.exists(img_path):
-        os.makedirs(img_path)
-
-    if not os.listdir(img_path):
-        return diff_pic
 
     #cv2.imshow('src', frame)
 
@@ -174,7 +159,7 @@ def hash_rmrept(frame, img_path):
     #         if os.path.isfile(path_file):
     #             os.remove(path_file)
     #             cv2.imwrite(img_path + '/' + str(pid)+"_"+ img_time +".jpg", frame)
-    result = read_img(img_path, frame)
+    result = read_img(img, frame)
 
     if result == 'diff_image':
 

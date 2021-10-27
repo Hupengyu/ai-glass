@@ -40,14 +40,16 @@ def postprocess(prediction, num_classes, conf_thre=0.7, nms_thre=0.45):
             continue
         # Get score and class with highest confidence
         class_conf, class_pred = torch.max(image_pred[:, 5: 5 + num_classes], 1, keepdim=True)
-
         conf_mask = (image_pred[:, 4] * class_conf.squeeze() >= conf_thre).squeeze()
+
         # _, conf_mask = torch.topk((image_pred[:, 4] * class_conf.squeeze()), 1000)
-        # Detections ordered as (x1, y1, x2, y2, obj_conf, class_conf, class_pred)
-        #print(image_pred[:,:5])
+        # Detections ordered as (x1, y1, x2, iy2, obj_conf, class_conf, class_pred)
+
         detections = torch.cat((image_pred[:, :5], class_conf, class_pred.float()), 1)
+        
         detections = detections[conf_mask]
         if not detections.size(0):
+            
             continue
 
         nms_out_index = torchvision.ops.batched_nms(
@@ -114,27 +116,3 @@ def xyxy2xywh(bboxes):
     bboxes[:, 2] = bboxes[:, 2] - bboxes[:, 0]
     bboxes[:, 3] = bboxes[:, 3] - bboxes[:, 1]
     return bboxes
-
-def yolo_correct_boxes(top, left, bottom, right, input_shape, image_shape):
-    new_shape = image_shape*np.min(input_shape/image_shape)
-    #print(image_shape)
-
-    offset = (input_shape-new_shape)/2./input_shape
-    scale = input_shape/new_shape
-
-    box_yx = np.concatenate(((top+bottom)/2,(left+right)/2),axis=-1)/input_shape
-    box_hw = np.concatenate((bottom-top,right-left),axis=-1)/input_shape
-
-    box_yx = (box_yx - offset) * scale
-    box_hw *= scale
-
-    box_mins = box_yx - (box_hw / 2.)
-
-    box_maxes = box_yx + (box_hw / 2.)
-
-    boxes =  np.concatenate([box_mins[:, 0:1],box_mins[:, 1:2],box_maxes[:, 0:1],box_maxes[:, 1:2]],axis=-1)
-   # print(boxes)
-    #print("__________")
-    boxes *= np.concatenate([image_shape, image_shape],axis=-1)
-   # print(boxes)
-    return boxes

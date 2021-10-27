@@ -8,9 +8,9 @@ MAX_INPUT_CAMERAS = 10
 MAX_WAIT_TIME = 120 # SECONDSE
 MAX_INVLAID_CAP_NUM = 5 # 最大无效图片获取次数
 MAX_INVLAID_FRAME_NUM = 200 # 最大无效图片获取次数
-rtpmurl_save_path = 'Fixed_ID.txt'  #
+rtpmurl_save_path = '../model_data/BoxStatu.txt'  #
 
-rtpmurl_info_path = 'ProjectID.txt'  # used to send rtpm info to detection server
+rtpmurl_info_path = '../model_data/Project_pid.txt'  # used to send rtpm info to detection server
 
 CAMERA_STATUS_SHUTDOWN = "statu00" #camera offline
 CAMERA_STATUS_START = "statu01" #camera offline

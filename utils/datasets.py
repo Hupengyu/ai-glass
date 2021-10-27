@@ -1,10 +1,8 @@
 # coding:utf-8
 import os
 import cv2
-import glob
 import time
 import numpy as np
-from pathlib import Path
 from threading import Thread
 import re
 
@@ -263,7 +261,7 @@ class LoadStreams:  # multiple IP or RTSP cameras
     def __len__(self):
         return 0  # 1E12 frames = 32 streams at 30 FPS for 30 years
 if __name__ == '__main__':
-    from yolo3_x import YOLO
+    from no.yolo3_x import YOLO
     yolo = YOLO()
     source =r'K:\JKY-AI-CX\server\url_pids.txt'
     dataset = LoadStreams(source, img_size=640, stride=32)

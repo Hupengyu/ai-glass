@@ -88,14 +88,8 @@ class Retinaface(object):
         self.generate()
         self.anchors = Anchors(self.cfg, image_size=(self.retinaface_input_shape[0], self.retinaface_input_shape[1])).get_anchors()
 
-        # try:
-        #     self.known_face_encodings = np.load("model_data/{backbone}_face_encoding.npy".format(backbone=self.facenet_backbone))
-        #     self.known_face_names     = np.load("model_data/{backbone}_names.npy".format(backbone=self.facenet_backbone))
-        # except:
-        #     if not encoding:
-        #         print("载入已有人脸特征失败，请检查model_data下面是否生成了相关的人脸特征文件。")
-        #     pass
-        db = pymysql.connect(host='192.168.2.205', port=3306, user='root', password='', db='face_feature_embedding')
+
+        db = pymysql.connect(host='localhost', port=3306, user='root', password='', db='face_feature_data')
         cursor = db.cursor()
 
         sql = "select * from facefeature"
@@ -120,22 +114,13 @@ class Retinaface(object):
         cursor.close()
         db.close()
 
-        # try:
-        #     self.known_face_encodings = np.load("model_data/{backbone}_face_encoding.npy".format(backbone=self.facenet_backbone))
-        #     self.known_face_names     = np.load("model_data/{backbone}_names.npy".format(backbone=self.facenet_backbone))
-        # except:
-        #     if not encoding:
-        #         print("载入已有人脸特征失败，请检查model_data下面是否生成了相关的人脸特征文件。")
-        #     pass
-        #print(self.known_face_names)
     #---------------------------------------------------#
     #   获得所有的分类
     #---------------------------------------------------#
     def generate(self):
-        self.net        = RetinaFace(cfg=self.cfg, phase='eval', pre_train=False).eval()
+        self.net        = RetinaFace(cfg=self.cfg, phase='eval', pre_trainlocalhost=False).eval()
         self.facenet    = Facenet(backbone=self.facenet_backbone, mode="predict").eval()
 
-        print('Loading weights into state dict...')
         state_dict = torch.load(self.retinaface_model_path)
         self.net.load_state_dict(state_dict)
 
@@ -148,19 +133,16 @@ class Retinaface(object):
 
             self.facenet = nn.DataParallel(self.facenet)
             self.facenet = self.facenet.cuda()
-        print('Finished!')
 
     def encode_face_dataset(self, image_paths, names):
         #数据库操作
-        db = pymysql.connect(host='192.168.2.205', port=3306, user='root', password='',
-                                     db='face_feature_embedding')
+        db = pymysql.connect(host='locahost', port=3306, user='root', password='',
+                                     db='face_feature_data')
         cursor = db.cursor()
 
         face_encodings = []
         for index, path in enumerate(tqdm(image_paths)):
-            # print("")
-            # print("name:")
-            # print(names[index])
+
 
             image = Image.open(path)
             image = np.array(image, np.float32)
@@ -218,7 +200,6 @@ class Retinaface(object):
                 boxes_conf_landms = non_max_suppression(boxes_conf_landms, self.confidence)
 
             if len(boxes_conf_landms)<=0:
-                print(names[index], "：未检测到人脸")
                 continue
 
             results = np.array(boxes_conf_landms)
@@ -259,19 +240,12 @@ class Retinaface(object):
 
                 face_encoding = self.facenet(crop_img)[0].cpu().numpy()
                 face_encodings.append(face_encoding)
-                # print(face_encoding.dtype)
-                # print(type(face_encoding))
-                # a = face_encoding.tostring()
-                # print(type(a))
-                # print("face_encoding")
-                # print(a)
-                # print(np.fromstring(a,dtype=np.float32))
+
                 encoding_array_list = face_encoding.tolist()
                 enconding_str_list = [str(i) for i in encoding_array_list]
                 enconding_str = ','.join(enconding_str_list)
 
 
-                #print(face_encoding)
                 #数据插入数据库
 
                 sql = 'INSERT INTO facefeature(name,embeding) VALUES(%s,%s)'
@@ -331,7 +305,7 @@ class Retinaface(object):
         #---------------------------------------------------#
         with torch.no_grad():
             loc, conf, landms = self.net(image)  # forward pass
-            
+
             #---------------------------------------------------#
             #   Retinaface网络的解码，最终我们会获得预测框
             #   将预测结果进行解码和非极大抑制
@@ -341,7 +315,7 @@ class Retinaface(object):
             boxes = boxes.cpu().numpy()
 
             conf = conf.data.squeeze(0)[:,1:2].cpu().numpy()
-            
+
             landms = decode_landm(landms.data.squeeze(0), anchors, self.cfg['variance'])
             landms = landms * scale_for_landmarks
             landms = landms.cpu().numpy()
@@ -359,7 +333,7 @@ class Retinaface(object):
         boxes_conf_landms = np.array(boxes_conf_landms)
         if self.letterbox_image:
             boxes_conf_landms = retinaface_correct_boxes(boxes_conf_landms, np.array((self.retinaface_input_shape[0], self.retinaface_input_shape[1])), np.array([im_height, im_width]))
-            
+
         #---------------------------------------------------#
         #   Retinaface检测部分-结束
         #---------------------------------------------------#
@@ -391,8 +365,7 @@ class Retinaface(object):
                 # 利用facenet_model计算长度为128特征向量
                 face_encoding = self.facenet(crop_img)[0].cpu().numpy()
                 face_encodings.append(face_encoding)
-                # print("face_encoding:")
-                # print(face_encoding)
+
         #-----------------------------------------------#
         #   Facenet编码部分-结束
         #-----------------------------------------------#
@@ -415,7 +388,6 @@ class Retinaface(object):
                 name = self.known_face_names[best_match_index]
                 num = num + 1
             face_names.append(name)
-        print(num)
         #-----------------------------------------------#
         #   人脸特征比对-结束
         #-----------------------------------------------#
@@ -520,7 +492,6 @@ class Retinaface(object):
                 best_match_index = np.argmin(face_distances)
                 if matches[best_match_index]: 
                     name = self.known_face_names[best_match_index]
-                    print(name)
                 face_names.append(name)
         
         t1 = time.time()

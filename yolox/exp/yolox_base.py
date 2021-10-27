@@ -18,14 +18,14 @@ class Exp(BaseExp):
         super().__init__()
 
         # ---------------- model config ---------------- #
-        self.num_classes = 10
+        self.num_classes = 12
         self.depth = 1.00
         self.width = 1.00
 
         # ---------------- dataloader config ---------------- #
         # set worker to 4 for shorter dataloader init time
         self.data_num_workers = 4
-        self.input_size = (608, 608)
+        self.input_size = (608,608)
         self.random_size = (14, 26)
         self.train_ann = "instances_train2017.json"
         self.val_ann = "instances_val2017.json"
@@ -41,12 +41,12 @@ class Exp(BaseExp):
 
         # --------------  training config --------------------- #
         self.warmup_epochs = 5
-        self.max_epoch = 300
+        self.max_epoch = 500
         self.warmup_lr = 0
         self.basic_lr_per_img = 0.01 / 64.0
         self.scheduler = "yoloxwarmcos"
         self.no_aug_epochs = 15
-        self.min_lr_ratio = 0.05
+        self.min_lr_ratio = 0.01
         self.ema = True
 
         self.weight_decay = 5e-4
@@ -56,7 +56,7 @@ class Exp(BaseExp):
         self.exp_name = os.path.split(os.path.realpath(__file__))[1].split(".")[0]
 
         # -----------------  testing config ------------------ #
-        self.test_size = (608, 608)
+        self.test_size = (608,608)
         self.test_conf = 0.01
         self.nmsthre = 0.65
 

@@ -15,7 +15,9 @@ class YOLOFPN(nn.Module):
     """
 
     def __init__(
-        self, depth=53, in_features=["dark3", "dark4", "dark5"],
+        self,
+        depth=53,
+        in_features=["dark3", "dark4", "dark5"],
     ):
         super().__init__()
 
@@ -41,9 +43,7 @@ class YOLOFPN(nn.Module):
             *[
                 self._make_cbl(in_filters, filters_list[0], 1),
                 self._make_cbl(filters_list[0], filters_list[1], 3),
-
                 self._make_cbl(filters_list[1], filters_list[0], 1),
-
                 self._make_cbl(filters_list[0], filters_list[1], 3),
                 self._make_cbl(filters_list[1], filters_list[0], 1),
             ]
@@ -52,7 +52,7 @@ class YOLOFPN(nn.Module):
 
     def load_pretrained_model(self, filename="./weights/darknet53.mix.pth"):
         with open(filename, "rb") as f:
-            state_dict = torch.load(f)
+            state_dict = torch.load(f, map_location="cpu")
         print("loading pretrained weights...")
         self.backbone.load_state_dict(state_dict)
 

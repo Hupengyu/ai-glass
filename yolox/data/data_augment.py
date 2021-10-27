@@ -162,7 +162,29 @@ def _mirror(image, boxes):
     return image, boxes
 
 
+def preproc(image, input_size, mean, std, swap=(2, 0, 1)):
+    if len(image.shape) == 3:
+        padded_img = np.ones((input_size[0], input_size[1], 3)) * 114.0
+    else:
+        padded_img = np.ones(input_size) * 114.0
+    img = np.array(image)
+    r = min(input_size[0] / img.shape[0], input_size[1] / img.shape[1])
+    resized_img = cv2.resize(
+        img, (int(img.shape[1] * r), int(img.shape[0] * r)), interpolation=cv2.INTER_LINEAR
+    ).astype(np.float32)
+    padded_img[: int(img.shape[0] * r), : int(img.shape[1] * r)] = resized_img
+    image = padded_img
 
+    image = image.astype(np.float32)
+    image = image[:, :, ::-1]
+    image /= 255.0
+    if mean is not None:
+        image -= mean
+    if std is not None:
+        image /= std
+    image = image.transpose(swap)
+    image = np.ascontiguousarray(image, dtype=np.float32)
+    return image, r
 
 
 def multi_preproc(image, input_size, mean, std, swap=(2, 0, 1)):

@@ -49,12 +49,12 @@ def launch(
     if world_size > 1:
         # https://github.com/pytorch/pytorch/pull/14391
         # TODO prctl in spawned processes
-
+    #
         if dist_url == "auto":
             assert num_machines == 1, "dist_url=auto cannot work with distributed training."
             port = _find_free_port()
             dist_url = f"tcp://127.0.0.1:{port}"
-
+   
         mp.spawn(
             _distributed_worker,
             nprocs=num_gpus_per_machine,
@@ -62,10 +62,11 @@ def launch(
                 main_func, world_size, num_gpus_per_machine,
                 machine_rank, backend, dist_url, args
             ),
-            daemon=False,
+            daemon=True,
         )
     else:
         main_func(*args)
+
 
 
 def _distributed_worker(

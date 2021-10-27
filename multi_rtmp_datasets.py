@@ -61,7 +61,7 @@ def letterbox(img, new_shape=(640, 640), color=(114, 114, 114), auto=True, scale
 
 
 class LoadStreams:  # multiple IP or RTSP cameras
-    def __init__(self, url_path='server/url_pids.txt', img_size=608, stride=32):
+    def __init__(self, url_path='server/url_cameras.txt', img_size=608, stride=32):
         self.mode = 'stream'
         self.img_size = img_size
         self.stride = stride
