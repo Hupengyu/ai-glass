@@ -31,7 +31,17 @@
 - 由git拉取镜像命令
   - sudo docker pull nvcr.io/nvidia/l4t-ml:r32.5.0-py3
 
-### 配置docker宿主机的mysql环境
+### docker 容器自启动
+- docker服务能随OS启动而启动
+  - sudo systemctl enable docker.service    # 设置开机启动
+  - sudo systemctl list-unit-files | grep enable    # 查看是否设置开机启动
+  - sudo systemctl list-units --type=service    # 查看已启动的服务
+- docker容器能随docker服务启动而启动
+  - --restart=always
+- docker容器内的服务能随docker容器启动而启动
+- 
+
+### 配置docker容器内mysql环境
 - 安装mysql(默认会使用)
   - apt-get update
   - apt-get install mysql-server
@@ -70,7 +80,8 @@
   - -v /opt/mysql_docker/mysql/conf:/etc/mysql/conf.d  
 
 - 运行
-  - docker run -it --name ai-glass --privileged=true --gpus all --restart=always -p 3306:3306 192.168.2.179:5000/jky/ai-glass:v1 bin/bash
+  - docker run -it --name ai-glass --privileged=true --gpus all --restart=always -p 3306:3306 192.168.2.179:5000/jky/ai-glass:v1 /start.sh
+  - docker run -it -p 3306:3306 --name ai-glass --privileged=true --restart=always --gpus=all -v /opt/mysql_docker/mysql:/etc/mysql -v /opt/mysql_docker/data:/var/lib/mysql  192.168.2.179:5000/jky/ai-glass:v1 bin/bash
 
 - 修改容器的编码格式：
   - export LANGUAGE=zh_CN.UTF-8
@@ -83,3 +94,9 @@
 
 ### Dockerfile
 - 根据本地镜像生成docker基础镜像
+
+### Docker镜像version
+- 192.168.2.179:5000/jky/ai-glass:v1 192.168.2.179:5000/jky/ai-glass:v1
+  - 带项目
+  - 代码未修改
+  - 没有启动程序start.sh
