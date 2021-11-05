@@ -60,8 +60,20 @@
 - 查看镜像tag
   - curl http://192.168.2.179:5000/v2/jky/ai-glass/tags/list
     - {"name":"jky/ai-glass","tags":["v1"]}
-- 拉取镜像
-  - docker pull 192.168.2.179:5000/jky/ai-glass:v1
+- 从服务器拉取镜像
+  - 修改配置文件
+      - vim /etc/docker/daemon.json
+  - 设置docker仓库权限
+    - {
+      "registry-mirrors": [
+            "https://registry.docker-cn.com",
+            "http://hub-mirror.c.163.com",
+            "https://pee6w651.mirror.aliyuncs.com",
+            "https://docker.mirrors.ustc.edu.cn"],
+      "insecure-registries": ["registry-1.docker.io","192.168.2.179:5000"]
+    }
+  - 拉取服务器上的镜像
+      - docker pull 192.168.2.179:5000/jky/ai-glass:v2
 
 ### 运行容器
 - 挂载
@@ -80,10 +92,10 @@
   - -v /opt/mysql_docker/mysql/conf:/etc/mysql/conf.d  
 
 - 运行
-  - docker run -it --name ai-glass --privileged=true --gpus all --restart=always 192.168.2.179:5000/jky/ai-glass:v1 /start.sh
+  - docker run -it --name ai-glass --privileged=true --gpus all --restart=always 192.168.2.179:5000/jky/ai-glass:1.0
 
 - 修改容器的编码格式：
-  - export LANG=en_US.UTF-8
+  - export LANG=en_US.UTF-8[如果有 en_US.utf8 优先使用]
   - export LANGUAGE=en_US:en
 - 永久设置需在Dockerfile中设置环境字符集环境变量
   - ENV  LANG="en_US.UTF-8"

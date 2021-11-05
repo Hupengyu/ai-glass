@@ -1,17 +1,17 @@
-FROM python:3.6.13
+FROM 192.168.2.179:5000/jky/ai-glass:v2
+
+ENV LANG=en_US.UTF-8 && LANGUAGE=en_US:en
 
 MAINTAINER hupengyu
 
-RUN apt update && apt-get -y install libgl1-mesa-glx && apt-get -y install vim
+COPY requirements-base.txt /home/pro/JKY-AI-CX/
 
-COPY requirements-base.txt /ai-glass/
+RUN pip install -r /home/pro/JKY-AI-CX/requirements-base.txt -i https://mirrors.aliyun.com/pypi/simple
 
-RUN pip install -r /ai-glass/requirements-base.txt -i https://mirrors.aliyun.com/pypi/simple
+ADD . /home/pro/JKY-AI-CX/
 
-ADD . /ai-glass
-
-WORKDIR /ai-glass
+WORKDIR /home/pro/JKY-AI-CX/
 
 RUN pip install -r requirements.txt -i https://mirrors.aliyun.com/pypi/simple
 
-CMD ["run.sh"]
+CMD ["start.sh"]
