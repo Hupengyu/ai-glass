@@ -1,0 +1,36 @@
+# 搭建0.2镜像
+### 0.1镜像环境
+- JetPack 4.5 (L4T R32.5.0)
+    - l4t-ml:r32.5.0-py3
+      - TensorFlow 1.15
+      - PyTorch v1.7.0
+      - torchvision v0.8.0
+      - torchaudio v0.7.0
+      - onnx 1.8.0
+      - CuPy 8.0.0
+      - numpy 1.19.4
+      - numba 0.52.0
+      - OpenCV 4.1.1
+      - pandas 1.1.5
+      - scipy 1.5.4
+      - scikit-learn 0.23.2
+      - JupyterLab 2.2.9
+### 准备工作
+- Jetson AGX Xavier更换apt-get源
+  - cp /etc/apt/sources.list /etc/apt/sources.list.bak
+  - echo deb http://mirrors.ustc.edu.cn/ubuntu-ports/ bionic-updates main restricted universe multiverse  >> sources.list
+  - echo deb http://mirrors.ustc.edu.cn/ubuntu-ports/ bionic-security main restricted universe multiverse >> sources.list
+  - echo deb http://mirrors.ustc.edu.cn/ubuntu-ports/ bionic-backports main restricted universe multiverse >> sources.list
+  - echo deb http://mirrors.ustc.edu.cn/ubuntu-ports/ bionic main universe restricted >> sources.list
+  - apt-get update
+- 安装vim/gedit
+  - apt-get install vim -y
+  - apt-get install gedit -y
+- pip3源修改
+    - mkdir ~/.pip
+    - vim ~/.pip/pip.conf
+      - [global]
+      - index-url = https://mirrors.aliyun.com/pypi/simple/
+      - index-url = https://pypi.tuna.tsinghua.edu.cn/simple/[备选]
+- 安装opencv4.1.1
+  - 
