@@ -179,7 +179,7 @@
   - -v /opt/mysql_docker/mysql/conf:/etc/mysql/conf.d  
 
 - 运行
-  - docker run -it --privileged=true --gpus all --restart=always 192.168.2.179:5000/jky/ai-glass:0.1
+  - docker run -it --privileged=true --gpus all --restart=always -p 80:80 192.168.2.179:5000/jky/ai-glass:latest
 
 - 修改容器的编码格式：
   - export LANG=en_US.UTF-8[如果有 en_US.utf8 优先使用]
