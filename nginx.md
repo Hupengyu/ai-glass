@@ -24,10 +24,10 @@
   - docker run -itd --restart=always -p 8777:1935 --name nginx-rtmp alfg/nginx-rtmp
 
 ### 流媒体服务器
-- 推流
+- 推流实例
   - ffmpeg -re -i 1.mp4 -f flv rtmp://119.3.185.115:8777/stream/123
   - ffplay rtmp://119.3.185.115:8777/stream/123
-
-*******
+- 推流监控器
+  - ffmpeg -i "rtsp://admin:jky123456@192.168.2.188" -vcodec copy -acodec aac -ar 44100 -strict -2 -ac 1 -f flv -s 4000x3000 -q 10 -f flv "rtmp://119.3.185.115:8777/stream/123"
 - 查看
   - ps -ef |grep nginx |grep -v grep
