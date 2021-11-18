@@ -21,4 +21,13 @@
 ### nginx-rtmp镜像版本
 - alfg/nginx-rtmp:latest
 - 运行
-  - docker run -itd --restart=always -p 1935:1935 -p 8081:81 --name nginx-rtmp-test alfg/nginx-rtmp
+  - docker run -itd --restart=always -p 8777:1935 --name nginx-rtmp alfg/nginx-rtmp
+
+### 流媒体服务器
+- 推流
+  - ffmpeg -re -i 1.mp4 -f flv rtmp://119.3.185.115:8777/stream/123
+  - ffplay rtmp://119.3.185.115:8777/stream/123
+
+*******
+- 查看
+  - ps -ef |grep nginx |grep -v grep
