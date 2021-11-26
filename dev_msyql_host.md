@@ -1,4 +1,4 @@
-### JETSON-AGX-XAVIER 配置
+0### JETSON-AGX-XAVIER 配置
 - cat /proc/version
   - Linux version 4.9.201-tegra (buildbrain@mobile-u64-4551) 
   - (gcc version 7.3.1 20180425 [linaro-7.3-2018.05 revision d29120a424ecfbc167ef90065c0eeb7f91977701] (Linaro GCC 7.3-2018.05) )
