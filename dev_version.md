@@ -29,11 +29,14 @@
   - docker run -it --privileged=true --gpus all --restart=always --net=host 192.168.2.179:5000/jky/ai-glass:v3
 
 - 192.168.2.179:5000/jky/ai-glass:v4(2022-1-1版本)
-  - 使用v2作为基础镜像
-  - project：JKY-AI-BOX
-  - 内网穿透：sunny-ngrok 
+  - 时间同步:RUN /bin/cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime && echo 'Asia/Shanghai' >/etc/timezone
+  - 编码格式:RUN export LANG=en_US.UTF-8 ENV LANG=en_US.UTF-8
+  - 推流ffmpeg:RUN apt-get install ffmpeg -y
+  - 基础镜像:使用v2作为基础镜像
+  - project名称：JKY-AI-BOX
+  - 内网穿透sunny-ngrok:setsid ./sunny clientid 155825333161 
   - 运行[使用本机的网络：--net=host]
-    - docker run -it --privileged=true --gpus all --restart=always --net=host 192.168.2.179:5000/jky/ai-glass:v4
+    - docker run -it --privileged=true --gpus all --restart=always --net=host 192.168.2.179:5000/jky/ai-glass:v5
   - 自启动docker容器内的项目：
     - Dockerfile中添加CMD[‘start.sh’]
   - 代码更新
@@ -46,5 +49,5 @@
     - docker容器能随docker服务启动而启动
       - --restart=always
     - docker容器内的服务能随docker容器启动而启动
-      - RUN chmod 777 start.sh
+      - RUN chmod 777 start.sh(没有也行好像)
       - CMD ["sh","start.sh"]

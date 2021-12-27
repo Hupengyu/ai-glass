@@ -29,4 +29,4 @@
   - ffmpeg -i "rtsp://admin:jky123456@192.168.2.188" -vcodec copy -acodec aac -ar 44100 -strict -2 -ac 1 -f flv -s 4000x3000 -q 10 -f flv "rtmp://119.3.185.115:8777/stream/rtsp://admin:jky123456@192.168.2.188"
 - 拉流
   - 使用VLC
-    - rtmp://119.3.185.115:8777/stream/rtsp://admin:jky123456@192.168.2.188
+    - rtmp://119.3.185.115:8777/stream//rtsp://admin:jky123456@192.168.2.188
