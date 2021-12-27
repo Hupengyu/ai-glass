@@ -28,7 +28,7 @@
   - 该镜像是基于v2的镜像通过Dockerfile生成的，包含最新代码 
   - docker run -it --privileged=true --gpus all --restart=always --net=host 192.168.2.179:5000/jky/ai-glass:v3
 
-- 192.168.2.179:5000/jky/ai-glass:v4(2021-1-1版本)
+- 192.168.2.179:5000/jky/ai-glass:v4(2022-1-1版本)
   - 使用v2作为基础镜像
   - project：JKY-AI-BOX
   - 内网穿透：sunny-ngrok 
